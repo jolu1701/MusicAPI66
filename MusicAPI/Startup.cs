@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
+using MusicAPI.APIs;
+using MusicAPI.Models;
 
-namespace MusicAPI66
+namespace MusicAPI
 {
     public class Startup
     {
@@ -26,6 +21,14 @@ namespace MusicAPI66
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddSingleton<IApiHelper, ApiHelper>();
+            services.AddSingleton<IMusicBrainzClient, MusicBrainzClient>();
+            services.AddSingleton<ICoverArtClient, CoverArtClient>();
+            services.AddSingleton<IWikiDataClient, WikiDataClient>();
+            services.AddSingleton<IWikiPediaClient, WikiPediaClient>();
+
+            services.AddScoped<IArtist, Artist>();
+            services.AddScoped<IMusicBrainzModel, MusicBrainzModel>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -41,7 +44,7 @@ namespace MusicAPI66
             }
 
             app.UseHttpsRedirection();
-            app.UseMvc();
+            app.UseMvc();               
         }
     }
 }
